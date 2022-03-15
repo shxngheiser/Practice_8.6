@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+
+ nginx:
+  build: ./for_nginx/
+  container_name: nginx
+  ports:
+   - 80:80
+  extra_hosts:
+   - "nginx:127.0.0.1"
+  volumes:
+   - /srv/sf_test_14.03/html/:/var/www/html/
+  depends_on:
+   - php
+
+ php:
+  build: ./php/
+  container_name: php
+  volumes:
+   - /srv/sf_test_14.03/html/:/var/www/html/
+  healthcheck:
+   test: curl -s -L http://nginx | grep 'works'
+   interval: 3s
+   timeout: 10s
+   retries: 10
